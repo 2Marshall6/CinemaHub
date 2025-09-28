@@ -11,48 +11,32 @@ on:
   workflow_dispatch:
 
 env:
-  # Имя вашего Container App (будет создано автоматически если не существует)
   CONTAINER_APP_NAME: "my-app-container"
   
-  # Имя окружения Container App
   CONTAINER_APP_ENVIRONMENT: "my-app-env"
-  
-  # Группа ресурсов Azure
-  RESOURCE_GROUP: "test-group"
-  
-  # Ваш Container Registry (уже создан)
-  ACR_NAME: "myconvitas"
-  
-  # Имя Docker образа
-  IMAGE_NAME: "myconvitas.azurecr.io/my-application:abc123"
-  
-  # Регион Azure для создания ресурсов
-  LOCATION: "East US"
 
-# 4. ДЖОБЫ (ЗАДАЧИ) - основная логика workflow
+  RESOURCE_GROUP: "test-group"
+
+  ACR_NAME: "myconvitas"
+
+  IMAGE_NAME: "myconvitas.azurecr.io/my-application:abc123"
+
+  LOCATION: "northeurope"
+
+
 jobs:
-  # ===========================================================================
-  # JOB 1: СБОРКА И ДЕПЛОЙ
-  # ===========================================================================
   build-and-deploy:
-    # Операционная система для выполнения
     runs-on: ubuntu-latest
-    
-    # Шаги выполнения
     steps:
     
-    # ШАГ 1: Получить код из репозитория
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
       
-    # ШАГ 2: Вход в Azure с помощью Service Principal
     - name: 🔐 Log in to Azure
       uses: azure/login@v1
       with:
-        # Используем секрет AZURE_CREDENTIALS (JSON от service principal)
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    # ШАГ 3: Проверка подключения к Azure (опционально, для отладки)
     - name: ✅ Verify Azure connection
       run: |
         echo "Current Azure subscription:"
@@ -60,7 +44,6 @@ jobs:
         echo "Available resource groups:"
         az group list --output table
     
-    # ШАГ 4: Сборка и деплой Container App
     - name: 🚀 Build and deploy Container App
       uses: azure/container-apps-deploy-action@v2
       with:
@@ -89,12 +72,8 @@ jobs:
         imageToBuild: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
         
         # Путь к Dockerfile (относительно корня репозитория)
-        dockerfilePath: ./Dockerfile
+        dockerfilePath: ./AuthenticationAndAuthorization/AuthenticationAndAuthorization/Dockerfile
         
         targetPort: 8080
         
         environmentVariables: 'ENVIRONMENT=production NODE_ENV=production'
-        
-        minReplicas: 1
-        
-        maxReplicas: 3
