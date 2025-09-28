@@ -19,7 +19,7 @@ env:
 
   ACR_NAME: "myconvitas"
 
-  IMAGE_NAME: "myconvitas.azurecr.io/my-application:abc123"
+  IMAGE_NAME: "my-application:abc123"
 
   LOCATION: "northeurope"
 
@@ -69,7 +69,7 @@ jobs:
 
         location: ${{ env.LOCATION }}
         
-        imageToBuild: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        imageToBuild: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
         
         # Путь к Dockerfile (относительно корня репозитория)
         dockerfilePath: ./AuthenticationAndAuthorization/AuthenticationAndAuthorization/Dockerfile
