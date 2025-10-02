@@ -17,7 +17,7 @@ env:
 
   RESOURCE_GROUP: "test-group"
 
-  ACR_NAME: "myconvitas"
+  ACR_NAME: "myconvit"
 
   IMAGE_NAME: "my-application:abc123"
 
@@ -71,9 +71,6 @@ jobs:
         
         imageToBuild: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
         
-        # Путь к Dockerfile (относительно корня репозитория)
-        dockerfilePath: ./AuthenticationAndAuthorization/AuthenticationAndAuthorization/Dockerfile
+        dockerfilePath: ./AuthenticationAndAuthorization/Dockerfile
         
         targetPort: 8080
-        
-        environmentVariables: 'ENVIRONMENT=production NODE_ENV=production'
