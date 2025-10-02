@@ -42,6 +42,6 @@ jobs:
         
         imageToBuild: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
         
-        dockerfilePath: .AuthenticationAndAuthorization/Dockerfile
+        dockerfilePath: .AuthenticationAndAuthorization/AuthenticationAndAuthorization/Dockerfile
         
         targetPort: 8080
