@@ -1,76 +1,50 @@
-name: Deploy to Azure Container Apps
+name: Deploy CinemaHub Auth Service
 
 on:
-
   push:
     branches: [ main ]
-    
-  pull_request:
-    branches: [ main ]
-    
   workflow_dispatch:
 
 env:
-  CONTAINER_APP_NAME: "my-app-container"
-  
-  CONTAINER_APP_ENVIRONMENT: "my-app-env"
-
-  RESOURCE_GROUP: "test-group"
-
   ACR_NAME: "myconvit"
-
-  IMAGE_NAME: "my-application:abc123"
-
+  IMAGE_NAME: "cinemahub-auth"
+  CONTAINER_APP_NAME: "cinemahub-auth-app"
+  CONTAINER_APP_ENVIRONMENT: "cinemahub-env"
+  RESOURCE_GROUP: "test-group"
   LOCATION: "northeurope"
-
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
     
+    steps:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
-      
+
     - name: 🔐 Log in to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - name: ✅ Verify Azure connection
-      run: |
-        echo "Current Azure subscription:"
-        az account show --output table
-        echo "Available resource groups:"
-        az group list --output table
-    
     - name: 🚀 Build and deploy Container App
       uses: azure/container-apps-deploy-action@v2
       with:
-        # ===== ИСХОДНЫЙ КОД =====
-        # Путь к исходному коду (корень репозитория)
         appSourcePath: ${{ github.workspace }}
-        
-        # ===== CONTAINER REGISTRY =====
-        # Имя вашего Azure Container Registry
+
         acrName: ${{ env.ACR_NAME }}
-        # Логин для Container Registry (из GitHub Secrets)
         acrUsername: ${{ secrets.REGISTRY_USERNAME }}
-        # Пароль для Container Registry (из GitHub Secrets)  
         acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
         
-        # ===== AZURE РЕСУРСЫ =====
-        # Имя Container App
         containerAppName: ${{ env.CONTAINER_APP_NAME }}
-
         containerAppEnvironment: ${{ env.CONTAINER_APP_ENVIRONMENT }}
-
         resourceGroup: ${{ env.RESOURCE_GROUP }}
-
         location: ${{ env.LOCATION }}
+
+        imageToBuild: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
         
-        imageToBuild: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}
-        
-        dockerfilePath: ./AuthenticationAndAuthorization/Dockerfile
-        
-        targetPort: 8080
+
+        dockerfilePath: ./AuthenticationAndAuthorization/AuthenticationAndAuthorization/Dockerfile
+          --query "properties.configuration.ingress.fqdn" \
+          --output tsv)
+        echo "Application URL: https://$APP_URL"
+        echo "==================================="
