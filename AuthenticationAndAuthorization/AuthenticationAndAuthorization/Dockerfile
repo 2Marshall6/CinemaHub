@@ -9,6 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY AuthenticationAndAuthorization/AuthenticationAndAuthorization.sln ./
+COPY MigrationApp/MigrationApp.csproj ./MigrationApp/
 COPY AuthenticationAndAuthorization/AuthenticationAndAuthorization/AuthenticationAndAuthorization.csproj ./AuthenticationAndAuthorization/
 COPY AuthenticationAndAuthorization/BusinessLogic/BusinessLogic.csproj ./BusinessLogic/
 COPY AuthenticationAndAuthorization/DataAccounts/DataAccounts.csproj ./DataAccounts/
