@@ -11,7 +11,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["AuthenticationAndAuthorization/AuthenticationAndAuthorization.csproj", "AuthenticationAndAuthorization/"]
+COPY ["AuthenticationAndAuthorization/AuthenticationAndAuthorization.csproj", "AuthenticationAndAuthorization/AuthenticationAndAuthorization/"]
 COPY ["AuthenticationAndAuthorization/BusinessLogic/BusinessLogic.csproj", "AuthenticationAndAuthorization/BusinessLogic/"]
 COPY ["AuthenticationAndAuthorization/DataAccounts/DataAccounts.csproj", "AuthenticationAndAuthorization/DataAccounts/"]
 RUN dotnet restore "./AuthenticationAndAuthorization/AuthenticationAndAuthorization.csproj"
