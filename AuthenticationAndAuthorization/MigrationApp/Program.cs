@@ -7,7 +7,7 @@ using DataAccounts.Repositories;
 using Microsoft.AspNetCore.Identity;
 using AuthenticationAndAuthorization.Extensions;
 
-public partial class Program
+public partial class Program 
 {
     static async Task Main(string[] args)
     {
