@@ -6,13 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  # Azure Container Registry
   ACR_NAME: "myconvit"
-  
-  # Имя Docker образа
   IMAGE_NAME: "cinemahub-auth"
-  
-  # Azure ресурсы
   CONTAINER_APP_NAME: "cinemahub-auth-app"
   CONTAINER_APP_ENVIRONMENT: "my-app-env"
   RESOURCE_GROUP: "test-group"
@@ -23,65 +18,30 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    # 1. Получить код из репозитория
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
 
-    # 2. Войти в Azure
     - name: 🔐 Log in to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    # 3. Проверка подключения к Azure
-    - name: ✅ Verify Azure connection
-      run: |
-        echo "Current subscription:"
-        az account show --output table
-        echo "Container Registry status:"
-        az acr show --name ${{ env.ACR_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --query "{name:name,loginServer:loginServer,location:location}" --output table
-
-    # 4. Сборка и деплой Container App
     - name: 🚀 Build and deploy Container App
       uses: azure/container-apps-deploy-action@v2
       with:
-        # Путь к исходному коду
         appSourcePath: ${{ github.workspace }}
         
-        # Container Registry настройки
         acrName: ${{ env.ACR_NAME }}
         acrUsername: ${{ secrets.REGISTRY_USERNAME }}
         acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
         
-        # Azure ресурсы
         containerAppName: ${{ env.CONTAINER_APP_NAME }}
         containerAppEnvironment: ${{ env.CONTAINER_APP_ENVIRONMENT }}
         resourceGroup: ${{ env.RESOURCE_GROUP }}
         location: ${{ env.LOCATION }}
         
-        # Docker образ для сборки
         imageToBuild: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
         
-        # Путь к Dockerfile
-        dockerfilePath: ./AuthenticationAndAuthorization/AuthenticationAndAuthorization/Dockerfile
+        dockerfilePath: .AuthenticationAndAuthorization/Dockerfile
         
-        # Настройки приложения
-        targetPort: 80
-        ingress: external
-        
-        # Переменные окружения для .NET приложения
-        environmentVariables: 'ASPNETCORE_ENVIRONMENT=Production ASPNETCORE_URLS=http://+:80'
-    
-    # 5. Получить URL развернутого приложения
-    - name: 🌐 Get application URL
-      run: |
-        echo "==================================="
-        echo "🎉 Deployment completed successfully!"
-        echo "==================================="
-        APP_URL=$(az containerapp show \
-          --name ${{ env.CONTAINER_APP_NAME }} \
-          --resource-group ${{ env.RESOURCE_GROUP }} \
-          --query "properties.configuration.ingress.fqdn" \
-          --output tsv)
-        echo "Application URL: https://$APP_URL"
-        echo "==================================="
+        targetPort: 8080
