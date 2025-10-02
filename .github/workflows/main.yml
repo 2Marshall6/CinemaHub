@@ -9,7 +9,7 @@ env:
   ACR_NAME: "myconvit"
   IMAGE_NAME: "cinemahub-auth"
   CONTAINER_APP_NAME: "cinemahub-auth-app"
-  CONTAINER_APP_ENVIRONMENT: "my-app-env"
+  CONTAINER_APP_ENVIRONMENT: "Production"
   RESOURCE_GROUP: "test-group"
   LOCATION: "northeurope"
 
@@ -42,6 +42,6 @@ jobs:
         
         imageToBuild: ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
         
-        dockerfilePath: AuthenticationAndAuthorization/AuthenticationAndAuthorization/Dockerfile
+        dockerfilePath: Dockerfile
         
         targetPort: 8080
