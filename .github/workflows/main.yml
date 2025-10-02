@@ -14,7 +14,7 @@ env:
   
   # Azure ресурсы
   CONTAINER_APP_NAME: "cinemahub-auth-app"
-  CONTAINER_APP_ENVIRONMENT: "cinemahub-env"
+  CONTAINER_APP_ENVIRONMENT: "my-app-env"
   RESOURCE_GROUP: "test-group"
   LOCATION: "northeurope"
 
